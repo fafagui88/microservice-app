@@ -1,0 +1,5 @@
+eureka:
+  client:
+    service-url:
+      # Pastikan URL dan port ini sesuai dengan Eureka Server Anda
+      defaultZone: http://localhost:8761/eureka

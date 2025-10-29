@@ -17,7 +17,7 @@ services:
       context: ./product-service    # Lokasi Dockerfile
     container_name: product-service
     ports:
-      - "8081:8081"               # Expose port (opsional, untuk pengujian langsung)
+      - "9092:8082"               # Expose port (opsional, untuk pengujian langsung)
     environment:
       # Pastikan service ini tahu lokasi Eureka (menggunakan nama service Docker)
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
@@ -32,7 +32,7 @@ services:
       context: ./order-service      # Lokasi Dockerfile
     container_name: order-service
     ports:
-      - "8080:8080"               # Port utama yang akan diakses dari luar
+      - "9091:8081"               # Port utama yang akan diakses dari luar
     environment:
       # Pastikan service ini tahu lokasi Eureka
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka

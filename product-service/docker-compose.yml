@@ -1,19 +1,24 @@
+version: '3.8'
 services:
-  eureka-server:
-    # ... konfigurasi lainnya ...
-    # Tambahkan kebijakan restart agar server stabil
-    restart: always 
-    
+  discovery-server:
+    # ... (Pastikan healthcheck ada di sini)
+    healthcheck: 
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s # Beri waktu 30 detik untuk siap
+
   product-service:
-    # ... konfigurasi lainnya ...
-    restart: on-failure # Coba restart jika gagal terhubung ke Eureka
+    image: microservice-app-product-service
+    ports:
+      - "8081:8081"
     depends_on:
-      eureka-server:
-        condition: service_started # Pastikan kontainer Eureka Server sudah dijalankan
+      discovery-server:
+        condition: service_healthy
+    # 🌟 SOLUSI BARU: Tambahkan penundaan 30 detik sebelum aplikasi Spring Boot dijalankan
+    entrypoint: ["sh", "-c", "sleep 30 && java -jar /app/app.jar"] # Asumsikan JAR Anda bernama app.jar
     
-  order-service:
-    # ... konfigurasi lainnya ...
-    restart: on-failure # Coba restart jika gagal terhubung ke Eureka
-    depends_on:
-      eureka-server:
-        condition: service_started # Pastikan kontainer Eureka Server sudah dijalankan
+    environment:
+      # URL EUREKA DI SINI HARUS SESUAI DENGAN NAMA SERVICE EUREKA
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka
