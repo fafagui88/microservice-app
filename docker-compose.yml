@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # 1. EUREKA SERVER (Service Registry)
+  eureka-server:
+    build: 
+      context: ./eureka-server      # Lokasi Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"               # Expose port ke host
+    networks:
+      - microservice-network      # Masukkan ke network yang sama
+
+  # 2. PRODUCT SERVICE (Yang Dipanggil)
+  product-service:
+    build: 
+      context: ./product-service    # Lokasi Dockerfile
+    container_name: product-service
+    ports:
+      - "8081:8081"               # Expose port (opsional, untuk pengujian langsung)
+    environment:
+      # Pastikan service ini tahu lokasi Eureka (menggunakan nama service Docker)
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server             # Tunggu Eureka running
+    networks:
+      - microservice-network
+
+  # 3. ORDER SERVICE (Pemanggil dengan @LoadBalanced)
+  order-service:
+    build: 
+      context: ./order-service      # Lokasi Dockerfile
+    container_name: order-service
+    ports:
+      - "8080:8080"               # Port utama yang akan diakses dari luar
+    environment:
+      # Pastikan service ini tahu lokasi Eureka
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+      - product-service           # Tunggu kedua service ini running
+    networks:
+      - microservice-network
+
+networks:
+  microservice-network:
+    driver: bridge # Jaringan virtual untuk komunikasi antar container

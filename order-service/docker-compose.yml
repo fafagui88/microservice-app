@@ -1,0 +1,19 @@
+services:
+  eureka-server:
+    # ... konfigurasi lainnya ...
+    # Tambahkan kebijakan restart agar server stabil
+    restart: always 
+    
+  product-service:
+    # ... konfigurasi lainnya ...
+    restart: on-failure # Coba restart jika gagal terhubung ke Eureka
+    depends_on:
+      eureka-server:
+        condition: service_started # Pastikan kontainer Eureka Server sudah dijalankan
+    
+  order-service:
+    # ... konfigurasi lainnya ...
+    restart: on-failure # Coba restart jika gagal terhubung ke Eureka
+    depends_on:
+      eureka-server:
+        condition: service_started # Pastikan kontainer Eureka Server sudah dijalankan
