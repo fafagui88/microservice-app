@@ -1,47 +1,52 @@
 version: '3.8'
 
 services:
-  # 1. EUREKA SERVER (Service Registry)
+  # 1. EUREKA SERVER (Service Registry) - Harus Up Pertama
   eureka-server:
     build: 
-      context: ./eureka-server      # Lokasi Dockerfile
+      context: ./eureka-server        # Docker akan mencari file DOCKERFILE di folder ini
     container_name: eureka-server
+    # Port untuk memantau Dashboard Eureka di host (localhost:8761)
     ports:
-      - "8761:8761"               # Expose port ke host
-    networks:
-      - microservice-network      # Masukkan ke network yang sama
-
-  # 2. PRODUCT SERVICE (Yang Dipanggil)
-  product-service:
-    build: 
-      context: ./product-service    # Lokasi Dockerfile
-    container_name: product-service
-    ports:
-      - "9092:8082"               # Expose port (opsional, untuk pengujian langsung)
-    environment:
-      # Pastikan service ini tahu lokasi Eureka (menggunakan nama service Docker)
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-    depends_on:
-      - eureka-server             # Tunggu Eureka running
+      - "8761:8761"
     networks:
       - microservice-network
 
-  # 3. ORDER SERVICE (Pemanggil dengan @LoadBalanced)
+  # 2. PRODUCT SERVICE (Provider)
+  product-service:
+    build: 
+      context: ./product-service      # Docker akan mencari file DOCKERFILE di folder ini
+    container_name: product-service
+    # Port 9092:8082 - Akses dari host ke service ini (opsional)
+    ports:
+      - "9092:8082" 
+    environment:
+      # PENTING: Komunikasi INTERNAL menggunakan nama service Docker 'eureka-server'
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8082 
+    depends_on:
+      - eureka-server                 
+    networks:
+      - microservice-network
+
+  # 3. ORDER SERVICE (Consumer/Pemanggil)
   order-service:
     build: 
-      context: ./order-service      # Lokasi Dockerfile
+      context: ./order-service        # Docker akan mencari file DOCKERFILE di folder ini
     container_name: order-service
+    # Port utama yang akan diakses dari luar (Client/Browser)
     ports:
-      - "9091:8081"               # Port utama yang akan diakses dari luar
+      - "9091:8081"
     environment:
-      # Pastikan service ini tahu lokasi Eureka
+      # PENTING: Komunikasi INTERNAL menggunakan nama service Docker 'eureka-server'
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SERVER_PORT: 8081 
     depends_on:
       - eureka-server
-      - product-service           # Tunggu kedua service ini running
+      - product-service               
     networks:
       - microservice-network
 
 networks:
   microservice-network:
-    driver: bridge # Jaringan virtual untuk komunikasi antar container
+    driver: bridge 
