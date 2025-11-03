@@ -1,6 +1,6 @@
 package com.example.product.model;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor; // Pilihan terbaik untuk nilai mata uang
 
 @Entity
 @Table(name = "product")
@@ -21,8 +21,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private Long productId;
-    private int quantity;
-    private double totalAmount;
-    private LocalDateTime orderDate = LocalDateTime.now();
+    // Field Master Produk
+    private String name;           // Nama Produk
+    private BigDecimal price;      // Harga Produk (Gunakan BigDecimal)
+    private Integer stock;         // Jumlah Stok
+    private String description;    // Deskripsi Produk
 }

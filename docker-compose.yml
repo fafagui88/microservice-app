@@ -18,6 +18,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: product_db
+      # *** BARIS PERBAIKAN WAJIB DITAMBAHKAN ***
+      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password 
     ports:
       - "33061:3306"                  # Port 33061 untuk akses dari host
     networks:
@@ -32,6 +34,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: order_db
+      # *** BARIS PERBAIKAN WAJIB DITAMBAHKAN ***
+      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
     ports:
       - "33062:3306"                  # Port 33062 untuk akses dari host
     networks:
@@ -72,7 +76,7 @@ services:
     networks:
       - microservice-network
 
-# 🌐 Network dan Volume harus di level root (sejajar dengan services)
+# Network dan Volume harus di level root (sejajar dengan services)
 networks:
   microservice-network:
     driver: bridge

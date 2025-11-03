@@ -21,7 +21,7 @@ public class ProductController {
     private ProductRepository productRepository;
 
     // Endpoint: CREATE NEW PRODUCT
-    @PostMapping
+    @PostMapping("/create")
     public Product createProduct(@RequestBody Product product) {
         return productRepository.save(product);
     }
