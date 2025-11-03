@@ -6,47 +6,77 @@ services:
     build: 
       context: ./eureka-server        # Docker akan mencari file DOCKERFILE di folder ini
     container_name: eureka-server
-    # Port untuk memantau Dashboard Eureka di host (localhost:8761)
     ports:
-      - "8761:8761"
+      - "8761:8761"                   # Dashboard Eureka di host (localhost:8761)
     networks:
       - microservice-network
 
-  # 2. PRODUCT SERVICE (Provider)
+  # 2. MySQL DATABASE FOR PRODUCT SERVICE
+  product-db:
+    image: mysql:8.0
+    container_name: product-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: product_db
+    ports:
+      - "33061:3306"                  # Port 33061 untuk akses dari host
+    networks:
+      - microservice-network
+    volumes:
+      - product_data:/var/lib/mysql
+
+  # 3. MySQL DATABASE FOR ORDER SERVICE
+  order-db:
+    image: mysql:8.0
+    container_name: order-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: order_db
+    ports:
+      - "33062:3306"                  # Port 33062 untuk akses dari host
+    networks:
+      - microservice-network
+    volumes:
+      - order_data:/var/lib/mysql
+
+  # 4. PRODUCT SERVICE (Provider)
   product-service:
     build: 
-      context: ./product-service      # Docker akan mencari file DOCKERFILE di folder ini
+      context: ./product-service
     container_name: product-service
-    # Port 9092:8082 - Akses dari host ke service ini (opsional)
     ports:
-      - "9092:8082" 
+      - "9092:8082"
     environment:
-      # PENTING: Komunikasi INTERNAL menggunakan nama service Docker 'eureka-server'
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-      SERVER_PORT: 8082 
+      SERVER_PORT: 8082
     depends_on:
-      - eureka-server                 
+      - eureka-server
+      - product-db
     networks:
       - microservice-network
 
-  # 3. ORDER SERVICE (Consumer/Pemanggil)
+  # 5. ORDER SERVICE (Consumer)
   order-service:
     build: 
-      context: ./order-service        # Docker akan mencari file DOCKERFILE di folder ini
+      context: ./order-service
     container_name: order-service
-    # Port utama yang akan diakses dari luar (Client/Browser)
     ports:
       - "9091:8081"
     environment:
-      # PENTING: Komunikasi INTERNAL menggunakan nama service Docker 'eureka-server'
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-      SERVER_PORT: 8081 
+      SERVER_PORT: 8081
     depends_on:
       - eureka-server
-      - product-service               
+      - product-service
+      - order-db
     networks:
       - microservice-network
 
+# 🌐 Network dan Volume harus di level root (sejajar dengan services)
 networks:
   microservice-network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  product_data:
+  order_data:

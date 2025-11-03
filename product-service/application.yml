@@ -1,0 +1,39 @@
+# Konfigurasi Port Aplikasi
+# PENTING: Atur port internal yang sama dengan yang diharapkan Docker (8082/8080)
+server:
+  port: 8082 # Port internal container (disarankan 8080/8082)
+
+# Konfigurasi Aplikasi (digunakan sebagai nama logis service di Eureka)
+spring:
+  application:
+    name: product-service
+
+  # --- Konfigurasi Database ---
+  # Kunci 'datasource' dan 'jpa' WAJIB di bawah 'spring'
+  datasource:
+    # URL menggunakan NAMA SERVICE DOCKER 'product-db'
+    url: jdbc:mysql://product-db:3306/product_db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update # Otomatis membuat tabel jika belum ada
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        
+# Konfigurasi Eureka Client
+eureka:
+  client:
+    # Klien WAJIB diaktifkan (true) agar bisa mendaftar
+    enabled: true
+    # Klien harus mendaftar ke Eureka Server
+    register-with-eureka: true
+    # Klien harus mengambil registrasi service lain
+    fetch-registry: true
+    # Alamat Eureka Server (Menggunakan NAMA SERVICE DOCKER 'eureka-server')
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

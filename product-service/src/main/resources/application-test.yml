@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    # Menggunakan H2 In-Memory database
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    # Mengatur H2 dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop # Buat tabel sebelum tes, hapus setelah tes
+    show-sql: false # Matikan log SQL

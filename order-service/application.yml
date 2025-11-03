@@ -1,0 +1,21 @@
+# Konfigurasi Port Aplikasi
+server:
+  port: 8082 # Atur port yang berbeda untuk Order Service
+
+# Konfigurasi Aplikasi (digunakan sebagai nama logis service di Eureka)
+spring:
+  application:
+    name: order-service
+
+# Konfigurasi Eureka Client
+eureka:
+  client:
+    # Klien harus mendaftar ke Eureka Server
+    register-with-eureka: true
+    # Klien harus mengambil registrasi service lain
+    fetch-registry: true
+    # Alamat Eureka Server
+    service-url:
+      # PENTING: Gunakan 'eureka-server' jika menggunakan Docker/Kubernetes
+      # Ganti menjadi 'localhost:8761' jika dijalankan tanpa Docker
+      defaultZone: http://eureka-server:8761/eureka/

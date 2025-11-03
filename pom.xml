@@ -14,8 +14,11 @@
     <description>Parent project for all microservices in the application.</description>
 
     <modules>
-        <module>service-user</module>
-        <module>service-order</module>
+        <!-- MODUL DIKOREKSI SESUAI NAMA FOLDER SEBENARNYA -->
+        <module>eureka-server</module>
+        <module>product-service</module>
+        <module>order-service</module>
+        <!-- Jika Anda memiliki service-user, masukkan lagi: <module>service-user</module> -->
     </modules>
 
     <properties>

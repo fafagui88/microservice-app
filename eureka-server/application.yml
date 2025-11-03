@@ -1,0 +1,21 @@
+# Konfigurasi Port Aplikasi
+server:
+  port: 8761
+
+# Konfigurasi Eureka Server
+eureka:
+  instance:
+    # Nama host instans ini (penting untuk Docker atau environment terdistribusi)
+    hostname: localhost 
+  client:
+    # Server tidak perlu mendaftar ke dirinya sendiri
+    register-with-eureka: false
+    # Server tidak perlu mengambil registrasi service dari dirinya sendiri
+    fetch-registry: false
+    # Alamat default untuk berkomunikasi dengan Eureka Server (alamat server ini sendiri)
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+spring:
+  application:
+    name: eureka-server

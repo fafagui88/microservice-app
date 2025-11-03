@@ -1,5 +1,48 @@
+# Konfigurasi Server (Sesuai dengan port internal di Docker Compose)
+server:
+  port: 8082 # Port Internal Container
+
+# Konfigurasi Aplikasi dan Database
+spring:
+  application:
+    name: product-service
+
+  # --- Konfigurasi Database ---
+  datasource:
+    # URL menggunakan NAMA SERVICE DOCKER 'product-db'
+    url: jdbc:mysql://product-db:3306/product_db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  # Pastikan JPA/Hibernate ada
+  jpa:
+    hibernate:
+      ddl-auto: update # Otomatis membuat tabel jika belum ada
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# Konfigurasi Eureka Client
 eureka:
   client:
+    # Klien harus mendaftar ke Eureka Server
+    register-with-eureka: true
+    # Klien harus mengambil registrasi service lain
+    fetch-registry: true
+    # Mengaktifkan Eureka Client (Wajib agar register_with_eureka bekerja)
+    enabled: true
     service-url:
-      # Pastikan URL dan port ini sesuai dengan Eureka Server Anda
-      defaultZone: http://localhost:8761/eureka
+      # PENTING: Gunakan NAMA SERVICE DOCKER 'eureka-server'
+      defaultZone: http://eureka-server:8761/eureka
+    
+    # Pengaturan untuk stabilitas pendaftaran
+    initial-instance-info-replication-interval-seconds: 5
+    
+  instance:
+    # Memastikan IP address yang didaftarkan ke Eureka adalah IP internal Docker
+    prefer-ip-address: true
+    # Pengaturan pendaftaran (dibuat lebih stabil untuk Docker)
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
