@@ -3,6 +3,7 @@ package com.example.product.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,11 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @GetMapping("/demo-info")
+    public ResponseEntity<String> demoInfo() {
+        return ResponseEntity.ok("This is demo info from Product Service 🚀");
+    }
+    
     // Endpoint: CREATE NEW PRODUCT
     @PostMapping("/create")
     public Product createProduct(@RequestBody Product product) {
@@ -27,7 +33,7 @@ public class ProductController {
     }
 
     // Endpoint: VIEW ALL PRODUCTS
-    @GetMapping
+    @GetMapping("/view")
     public List<Product> viewAllProducts() {
         return productRepository.findAll();
     }

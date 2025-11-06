@@ -1,6 +1,6 @@
 # Konfigurasi Server (Sesuai dengan port internal di Docker Compose)
 server:
-  port: 8082 # Port Internal Container
+  port: 9092 # Port Internal Container (Akan di-override di Docker Compose)
 
 # Konfigurasi Aplikasi dan Database
 spring:

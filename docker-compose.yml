@@ -21,7 +21,7 @@ services:
       # *** BARIS PERBAIKAN WAJIB DITAMBAHKAN ***
       MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password 
     ports:
-      - "33061:3306"                  # Port 33061 untuk akses dari host
+      - "33061:33061"                  # Port 33061 untuk akses dari host
     networks:
       - microservice-network
     volumes:
@@ -37,7 +37,7 @@ services:
       # *** BARIS PERBAIKAN WAJIB DITAMBAHKAN ***
       MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
     ports:
-      - "33062:3306"                  # Port 33062 untuk akses dari host
+      - "33062:33062"                  # Port 33062 untuk akses dari host
     networks:
       - microservice-network
     volumes:
@@ -49,10 +49,10 @@ services:
       context: ./product-service
     container_name: product-service
     ports:
-      - "9092:8082"
+      - "9092:9092"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-      SERVER_PORT: 8082
+      SERVER_PORT: 9092
     depends_on:
       - eureka-server
       - product-db
@@ -65,10 +65,10 @@ services:
       context: ./order-service
     container_name: order-service
     ports:
-      - "9091:8081"
+      - "9091:9091"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-      SERVER_PORT: 8081
+      SERVER_PORT: 9091
     depends_on:
       - eureka-server
       - product-service

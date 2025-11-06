@@ -1,5 +1,5 @@
 # Gunakan base image Java yang sesuai dengan versi proyek Anda (misalnya Java 21)
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk
 
 # Tentukan argumen file JAR hasil build Maven
 ARG JAR_FILE=target/*.jar
