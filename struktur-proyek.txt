@@ -1,0 +1,76 @@
+microservice-app/
+├── eureka-server/                    
+│   ├── src/
+│   │   └── main/
+│   │       ├── java/
+│   │       │   └── com/example/eurekaserver/
+│   │       │       └── EurekaServerApplication.java
+│   │       └── resources/
+│   │           └── application.properties  
+│   └── pom.xml  <-- File yang sudah ada kode nya tidak perlu di customemize
+│
+├── histories/                     <-- Microservice Histories
+│   ├── src/
+│   │   └── main/
+│   │       ├── java/
+│   │       │   └── com/project4/histories/
+│   │       │       ├── HistoriesApplication.java   <-- File yang sudah ada function main nya
+│   │       │       ├── controller/
+│   │       │       │   └── HistoryController.java  <-- File yang baru dimodifikasi
+│   │       │       ├── model/
+│   │       │       │   └── History.java            <-- Model JPA Anda
+│   │       │       └── repository/
+│   │       │           └── HistoryRepository.java
+│   │       └── resources/
+│   │           └── application.yaml  <-- Konfigurasi DB MySQL, Eureka, notes: jangan menggunakan port: 8080, gunakan port lain seperti 8087, dan DB port 3317
+|   |               spring:
+|   |                   application:
+|   |                       name: histories
+|   |
+│   └── pom.xml   <-- File yang sudah ada kode nya tidak perlu di customemize
+│
+├── products/                     <-- Microservice Produk
+│   ├── src/
+│   │   └── main/
+│   │       └── java/
+│   │           └── com/project4/products/
+│   │               ├── ProductsServiceApplication.java
+│   │               ├── controller/
+│   │               │   └── ProductsController.java
+│   │               ├── model/
+│   │               │   └── Products.java
+│   │               └── repository/
+│   │                   └── ProductsRepository.java
+│   └── pom.xml
+│
+├── transactions/                     <-- Microservice Transaksi
+│   ├── src/
+│   │   └── main/
+│   │       └── java/
+│   │           └── com/project4/transactions/
+│   │               ├── TransactionsServiceApplication.java
+│   │               ├── controller/
+│   │               │   └── TransactionsController.java
+│   │               ├── model/
+│   │               │   └── Transactions.java
+│   │               └── repository/
+│   │                   └── TransactionsRepository.java
+│   └── pom.xml
+│
+├── users/                     <-- Microservice Pengguna
+│   ├── src/
+│   │   └── main/
+│   │       └── java/
+│   │           └── com/project4/users/
+│   │               ├── UsersServiceApplication.java
+│   │               ├── controller/
+│   │               │   └── UsersController.java
+│   │               ├── model/
+│   │               │   └── Users.java
+│   │               └── repository/
+│   │                   └── UsersRepository.java
+│   └── pom.xml
+│
+├── docker-compose.yml                 <-- File Kunci untuk Deployment (Definisi semua Service + DB)
+│
+└── pom.xml (Root)                     <-- POM Induk (Parent POM) untuk mengelola semua sub-modul perlu di customemize

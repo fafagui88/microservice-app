@@ -1,3 +1,18 @@
+server:
+  port: 8083
 spring:
   application:
     name: transactions
+  datasource:
+    url: jdbc:mysql://mysql-transactions:3306/transactions_db
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

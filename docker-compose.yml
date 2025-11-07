@@ -1,86 +1,73 @@
 version: '3.8'
-
 services:
-  # 1. EUREKA SERVER (Service Registry) - Harus Up Pertama
+  mysql-users:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: users_db
+    ports:
+      - "33061:3306"
+
+  mysql-products:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: products_db
+    ports:
+      - "33062:3306"
+
+  mysql-transactions:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: transactions_db
+    ports:
+      - "33063:3306"
+
+  mysql-histories:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: histories_db
+    ports:
+      - "3317:3306"
+
   eureka-server:
-    build: 
-      context: ./eureka-server        # Docker akan mencari file DOCKERFILE di folder ini
-    container_name: eureka-server
+    build: ./eureka-server
     ports:
-      - "8761:8761"                   # Dashboard Eureka di host (localhost:8761)
-    networks:
-      - microservice-network
+      - "8761:8761"
 
-  # 2. MySQL DATABASE FOR PRODUCT SERVICE
-  product-db:
-    image: mysql:8.0
-    container_name: product-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: product_db
-      # *** BARIS PERBAIKAN WAJIB DITAMBAHKAN ***
-      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password 
+  users:
+    build: ./users
     ports:
-      - "33061:3306"                  # Port 33061 untuk akses dari host
-    networks:
-      - microservice-network
-    volumes:
-      - product_data:/var/lib/mysql
-
-  # 3. MySQL DATABASE FOR ORDER SERVICE
-  order-db:
-    image: mysql:8.0
-    container_name: order-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: order_db
-      # *** BARIS PERBAIKAN WAJIB DITAMBAHKAN ***
-      MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: mysql_native_password
-    ports:
-      - "33062:3306"                  # Port 33062 untuk akses dari host
-    networks:
-      - microservice-network
-    volumes:
-      - order_data:/var/lib/mysql
-
-  # 4. PRODUCT SERVICE (Provider)
-  product-service:
-    build: 
-      context: ./product-service
-    container_name: product-service
-    ports:
-      - "9092:8082"
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-      SERVER_PORT: 8082
+      - "8081:8081"
     depends_on:
+      - mysql-users
       - eureka-server
-      - product-db
-    networks:
-      - microservice-network
 
-  # 5. ORDER SERVICE (Consumer)
-  order-service:
-    build: 
-      context: ./order-service
-    container_name: order-service
+  products:
+    build: ./products
     ports:
-      - "9091:8081"
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
-      SERVER_PORT: 8081
+      - "8082:8082"
     depends_on:
+      - mysql-products
       - eureka-server
-      - product-service
-      - order-db
-    networks:
-      - microservice-network
 
-# Network dan Volume harus di level root (sejajar dengan services)
-networks:
-  microservice-network:
-    driver: bridge
+  transactions:
+    build: ./transactions
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql-transactions
+      - users
+      - products
+      - histories
+      - eureka-server
 
-volumes:
-  product_data:
-  order_data:
+  histories:
+    build: ./histories
+    ports:
+      - "8087:8087"
+    depends_on:
+      - mysql-histories
+      - eureka-server
