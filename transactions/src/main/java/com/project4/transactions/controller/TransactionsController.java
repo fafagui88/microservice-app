@@ -3,6 +3,7 @@ package com.project4.transactions.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import java.util.*;
 import com.project4.transactions.repository.TransactionsRepository;
 import com.project4.transactions.model.Transactions;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class TransactionsController {
 
     private final TransactionsRepository repo;
+    @LoadBalanced
     private final RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping
