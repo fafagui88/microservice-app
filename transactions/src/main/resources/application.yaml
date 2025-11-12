@@ -1,18 +1,30 @@
 server:
-  port: 8083
+  port: 8082
+
 spring:
   application:
     name: transactions
+
   datasource:
     url: jdbc:mysql://mysql-transactions:3306/transactions_db
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+reloadly:
+  client-id: xhUZYUFpWJkP5ZHA3FqUeWVtB7IBS1Yi
+  client-secret: oIqIgLbk8x-DS97YPxefA8o3ysVubr-bPviH9KHffR8Lx6RlbqnNWrePKLyn4DN
+  auth-url: https://auth.reloadly.com/oauth/token
+  topups-url: https://topups.reloadly.com/topups
+
+users:
+  service:
+    url: http://users:8081/api/users
 
 eureka:
   client:

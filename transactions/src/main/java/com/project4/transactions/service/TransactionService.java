@@ -93,6 +93,11 @@ public class TransactionService {
         // ✅ Step 2: Ambil token dari Reloadly
         String token = getAccessToken();
 
+        if (token == null || token.isEmpty()) {
+            log.error("[TOPUP] Gagal mendapatkan token dari Reloadly");
+            throw new RuntimeException("Gagal mendapatkan token dari Reloadly");
+        }
+
         // ✅ Step 3: Siapkan payload untuk API Reloadly
         Map<String, Object> recipientPhone = Map.of("countryCode", "ID", "number", req.getPhoneNumber());
         String customIdentifier = "TX-" + UUID.randomUUID();
