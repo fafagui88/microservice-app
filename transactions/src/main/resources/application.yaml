@@ -1,14 +1,14 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   application:
     name: transactions
 
   datasource:
-    url: jdbc:mysql://mysql-transactions:3306/transactions_db
-    username: root
-    password: root
+    url: jdbc:mysql://mysql:3306/transactions_db
+    username: myuser
+    password: secret
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -17,14 +17,14 @@ spring:
     show-sql: true
 
 reloadly:
-  client-id: xhUZYUFpWJkP5ZHA3FqUeWVtB7IBS1Yi
-  client-secret: oIqIgLbk8x-DS97YPxefA8o3ysVubr-bPviH9KHffR8Lx6RlbqnNWrePKLyn4DN
-  auth-url: https://auth.reloadly.com/oauth/token
-  topups-url: https://topups.reloadly.com/topups
+  client-id: ${RELOADLY_CLIENT_ID}
+  client-secret: ${RELOADLY_CLIENT_SECRET}
+  auth-url: ${RELOADLY_AUTH_URL}
+  topups-url: ${RELOADLY_TOPUPS_URL}
 
 users:
   service:
-    url: http://users:8081/api/users
+    url: http://localhost:8081
 
 eureka:
   client:
